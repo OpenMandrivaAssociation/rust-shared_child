@@ -1,0 +1,47 @@
+From 7860be68defbae89ac2baab06b8052abac1cc946 Mon Sep 17 00:00:00 2001
+From: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+Date: Sun, 7 Jul 2019 16:36:34 +0200
+Subject: [PATCH] Avoid using python in the tests
+
+References: https://github.com/oconnor663/shared_child.rs/issues/16
+Signed-off-by: Igor Gnatenko <i.gnatenko.brain@gmail.com>
+---
+ src/lib.rs | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/src/lib.rs b/src/lib.rs
+index ee77aa4..e9c7118 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -39,8 +39,8 @@
+ //!
+ //! // Spawn a child that will just sleep for a long time,
+ //! // and put it in an Arc to share between threads.
+-//! let mut command = Command::new("python");
+-//! command.arg("-c").arg("import time; time.sleep(1000000000)");
++//! let mut command = Command::new("sleep");
++//! command.arg("infinity");
+ //! let shared_child = SharedChild::spawn(&mut command).unwrap();
+ //! let child_arc = Arc::new(shared_child);
+ //!
+@@ -232,14 +232,12 @@ mod tests {
+     use std::sync::Arc;
+ 
+     pub fn true_cmd() -> Command {
+-        let mut cmd = Command::new("python");
+-        cmd.arg("-c").arg("");
+-        cmd
++        Command::new("true")
+     }
+ 
+     pub fn sleep_forever_cmd() -> Command {
+-        let mut cmd = Command::new("python");
+-        cmd.arg("-c").arg("import time; time.sleep(1000000)");
++        let mut cmd = Command::new("sleep");
++        cmd.arg("infinity");
+         cmd
+     }
+ 
+-- 
+2.23.0
+
